@@ -1,7 +1,7 @@
 import requests
 
 
-class HH_API:
+class Hh_api:
     HH_API_URL = 'https://api.hh.ru/vacancies'
     HH_API_URL_AREAS = 'https://api.hh.ru/vacancies'
 
@@ -22,20 +22,6 @@ class HH_API:
         respons = requests.get(self.HH_API_URL, self.params)
         return respons.json()
 
-    # def load_areas(self):
-    #     req = requests.get(HeadHunterAPI.HH_API_URL_AREAS)
-    #     dict_areas = req.json()
-    #
-    #     areas = {}
-    #     for k in dict_areas:
-    #         for i in range(len(k['areas'])):
-    #             if len(k['areas'][i]['areas']) != 0:
-    #                 for j in range(len(k['areas'][i]['areas'])):
-    #                     areas[k['areas'][i]['areas'][j]['name'].lower()] = k['areas'][i]['areas'][j]['id']
-    #             else:
-    #                 areas[k['areas'][i]['name'].lower()] = k['areas'][i]['id']
-    #     return areas
-
     def format_vacancies(self, all_vacancies):
         vacancies = {'vacancies': []}
         for vacancy in all_vacancies['items']:
@@ -48,6 +34,9 @@ class HH_API:
             else:
                 salary = (vacancy['salary']['from'] + vacancy['salary']['to']) // 2
             new_job = {'name': vacancy['name'], 'url': vacancy['url'], 'salary': salary,
-                       'experience': vacancy['experience']['name']}
+                       'experience': vacancy['experience']['name'],
+                       'employer_name': vacancy['employer']['name'],
+                       'address': vacancy['address'],
+                       'vacancy_id': vacancy['id']}
             vacancies['vacancies'].append(new_job)
         return vacancies
