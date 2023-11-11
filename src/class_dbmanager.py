@@ -3,16 +3,7 @@ import csv
 from typing import Any
 
 
-def open_csv_file(file):
-    with open(file, 'r') as csv_file:
-        csv_reader = csv.reader(csv_file)
-        data = list(csv_reader)
-    return data
 
-
-employees = open_csv_file('north_data/employees_data.csv')
-customers = open_csv_file('north_data/customers_data.csv')
-orders = open_csv_file('north_data/orders_data.csv')
 
 """Скрипт для заполнения данными таблиц в БД Postgres."""
 
