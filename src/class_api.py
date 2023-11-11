@@ -35,8 +35,14 @@ class Hh_api:
                 salary = (vacancy['salary']['from'] + vacancy['salary']['to']) // 2
             new_job = {'name': vacancy['name'], 'url': vacancy['url'], 'salary': salary,
                        'experience': vacancy['experience']['name'],
-                       'employer_name': vacancy['employer']['name'],
-                       'address': vacancy['address'],
                        'vacancy_id': vacancy['id']}
             vacancies['vacancies'].append(new_job)
         return vacancies
+
+    def format_employers(self, all_vacancies):
+        employers = {'employers': []}
+        for employer in all_vacancies['items']:
+            new_job = {'employer_name': employer['employer']['name'],
+                       'address': employer['address'],
+                       'vacancy_id': employer['id']}
+            employers['employers'].append(new_job)
