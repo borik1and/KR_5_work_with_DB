@@ -1,13 +1,15 @@
 import requests
 
-# Import employers from 'src/employers.py' assuming it contains a list of employer IDs
 from src.employers import emp
+
+all_vacanciess = []
 
 HH_API_URL = 'https://api.hh.ru/vacancies'
 params = {
     'per_page': 100,
     'area': 1
 }
+
 
 def get_vacancies(employer_id):
     params['employer_id'] = employer_id
@@ -18,6 +20,7 @@ def get_vacancies(employer_id):
     except requests.RequestException as e:
         print(f"Error: {e}")
         return None
+
 
 def format_vacancies(all_vacancies):
     vacancies = []
@@ -33,7 +36,7 @@ def format_vacancies(all_vacancies):
             elif salary_to is not None:
                 salary = salary_to
         new_job = {
-            'name': vacancy['name'],
+            'vacancy_name': vacancy['name'],
             'url': vacancy['url'],
             'salary': salary,
             'experience': vacancy['experience']['name'],
@@ -43,13 +46,13 @@ def format_vacancies(all_vacancies):
         vacancies.append(new_job)
     return vacancies
 
-def get_employers_vacancy():
+
+def get_employers_vacancy() -> None:
     for employer_id in emp:
         all_vacancies = get_vacancies(employer_id)
         if all_vacancies:
             formatted_vacancies = format_vacancies(all_vacancies)
-            print(f"Vacancies for employer {employer_id}:")
-            print(formatted_vacancies)
-            print("\n")
+            all_vacanciess.append(formatted_vacancies)
 
 get_employers_vacancy()
+print(all_vacanciess)

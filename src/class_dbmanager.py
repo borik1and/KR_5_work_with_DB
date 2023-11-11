@@ -1,11 +1,5 @@
 import psycopg2
-import csv
 from typing import Any
-
-
-
-
-"""Скрипт для заполнения данными таблиц в БД Postgres."""
 
 db_config = {
     'dbname': 'north',
@@ -14,12 +8,13 @@ db_config = {
     'host': 'localhost'
 }
 
-with psycopg2.connect(**db_config) as conn:
-    with conn.cursor() as cur:
-        cur.executemany("INSERT INTRO vacancyes VALUES(%s, %s, %s, %s, %s, %s)", [i for i in employees])
-        cur.executemany("INSERT INTRO employers VALUES(%s, %s, %s)", [i for i in customers])
-conn.close()
 
+# with psycopg2.connect(**db_config) as conn:
+#     with conn.cursor() as cur:
+#         cur.executemany("INSERT INTRO vacancyes VALUES(%s, %s, %s, %s, %s, %s)", [i for i in employees])
+#         cur.executemany("INSERT INTRO employers VALUES(%s, %s, %s)", [i for i in customers])
+# conn.close()
+#
 
 class DBManager:
     def __init__(self):
@@ -85,10 +80,10 @@ def create_database(database_name='vacancies') -> None:
     conn.close()
 
 
-def save_data_to_database(data: list[dict[str, Any]], database_name: str, params: dict) -> None:
+def save_data_to_database(data: list[dict[str, Any]], database_name='vacancies') -> None:
     """сохранение данных в базу данныз"""
 
-    conn = psycopg2.connect(dbname=database_name, **params)
+    conn = psycopg2.connect(dbname=database_name, **db_config)
 
     with conn.cursor() as cur:
         for channel in data:
