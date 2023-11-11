@@ -47,7 +47,7 @@ class DBManager:
         pass
 
 
-def create_database(database_name: str, params: dict) -> None:
+def create_database(database_name='vacancies') -> None:
     """создание базы данных и таблиц"""
 
     conn = psycopg2.connect(dbname='postgres', **db_config)
@@ -59,27 +59,25 @@ def create_database(database_name: str, params: dict) -> None:
 
     conn.close()
 
-    conn = psycopg2.connect(dbname=database_name, **params)
+    conn = psycopg2.connect(dbname=database_name, **db_config)
 
     with conn.cursor() as cur:
         cur.execute("""
                 CREATE TABLE vacancy (
-                    id_vacancy INT,
-                    title_vacancy VARCHAR(100) NOT NULL,
-                    url_vacancy TEXT,
-                    selary_from INT,
-                    selary_to INT,
-                    selary_currency VARCHAR(10),
-                    employer_id INT
+                    vacancy_name VARCHAR(100) NOT NULL,
+                    url TEXT,
+                    salary INT,
+                    experience INT,
+                    employer_name TEXT,
+                    acancy_id INT
                 )
             """)
 
     with conn.cursor() as cur:
         cur.execute("""
                 CREATE TABLE employer (
-                    employer_id INT REFERENCES vacancy(employer_id),
-                    employer_name VARCHAR(50),
-                    employer_url TEXT
+                    employer_id INT,
+                    employer_name VARCHAR REFERENCES vacancy(employer_name)
                 )
             """)
 
