@@ -1,12 +1,6 @@
-import psycopg2
 from typing import Any
 
-db_config = {
-    'dbname': 'north',
-    'user': 'postgres',
-    'password': '1975',
-    'host': 'localhost'
-}
+import psycopg2
 
 
 # with psycopg2.connect(**db_config) as conn:
@@ -42,39 +36,45 @@ class DBManager:
         pass
 
 
-def create_database(database_name='vacancies') -> None:
-    """создание базы данных и таблиц"""
+def create_database(database_name: str, params: dict):
+    """Создание базы данных и таблиц для сохранения данных о вакансиях."""
 
-    conn = psycopg2.connect(dbname='postgres', **db_config)
+    # Подключаемся к базе данных PostgreSQL (по умолчанию postgres), чтобы создать новую базу данных
+    conn = psycopg2.connect(dbname='postgres', **params)
     conn.autocommit = True
     cur = conn.cursor()
 
-    cur.execute(f"DROP DATABASE {database_name}")
+    # Удаляем существующую базу данных с указанным именем (если она существует)
+    cur.execute(f"DROP DATABASE IF EXISTS {database_name}")
+    # Создаем новую базу данных с указанным именем
     cur.execute(f"CREATE DATABASE {database_name}")
 
     conn.close()
 
-    conn = psycopg2.connect(dbname=database_name, **db_config)
+    # Подключаемся к базе данных
+    conn = psycopg2.connect(dbname=database_name, **params)
 
+    # Создаем таблицу 'vacancy'
     with conn.cursor() as cur:
         cur.execute("""
-                CREATE TABLE vacancy (
-                    vacancy_name VARCHAR(100) NOT NULL,
-                    url TEXT,
-                    salary INT,
-                    experience INT,
-                    employer_name TEXT,
-                    acancy_id INT
-                )
-            """)
+            CREATE TABLE IF NOT EXISTS vacancy (         
+                    vacancy_id INT,                          
+                    vacancy_name VARCHAR(100) NOT NULL,      
+                    url TEXT,                                
+                    salary INT,                              
+                    experience INT,                          
+                    employer_name VARCHAR(100)               
+                )                                            
+        """)
 
+    # Создаем таблицу 'employer'
     with conn.cursor() as cur:
         cur.execute("""
-                CREATE TABLE employer (
-                    employer_id INT,
-                    employer_name VARCHAR REFERENCES vacancy(employer_name)
-                )
-            """)
+            CREATE TABLE IF NOT EXISTS employer (
+                employer_id INT,         
+                employer_name VARCHAR        
+            )                            
+        """)
 
     conn.commit()
     conn.close()
@@ -83,7 +83,7 @@ def create_database(database_name='vacancies') -> None:
 def save_data_to_database(data: list[dict[str, Any]], database_name='vacancies') -> None:
     """сохранение данных в базу данныз"""
 
-    conn = psycopg2.connect(dbname=database_name, **db_config)
+    conn = psycopg2.connect(dbname=database_name, **params)
 
     with conn.cursor() as cur:
         for channel in data:

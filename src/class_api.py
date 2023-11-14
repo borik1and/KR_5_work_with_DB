@@ -54,5 +54,5 @@ def get_employers_vacancy() -> None:
             formatted_vacancies = format_vacancies(all_vacancies)
             all_vacanciess.append(formatted_vacancies)
 
-get_employers_vacancy()
-print(all_vacanciess)
+# get_employers_vacancy()
+# print(all_vacanciess)
