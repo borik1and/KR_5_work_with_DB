@@ -1,4 +1,5 @@
 import requests
+import urllib.parse
 
 from src.employers import emp
 
@@ -15,7 +16,7 @@ def get_vacancies(employer_id):
     params['employer_id'] = employer_id
     try:
         response = requests.get(HH_API_URL, params=params)
-        response.raise_for_status()  # Raise an HTTPError for bad responses
+        response.raise_for_status()
         return response.json()
     except requests.RequestException as e:
         print(f"Error: {e}")
@@ -47,12 +48,9 @@ def format_vacancies(all_vacancies):
     return vacancies
 
 
-def get_employers_vacancy() -> None:
-    for employer_id in emp:
-        all_vacancies = get_vacancies(employer_id)
-        if all_vacancies:
-            formatted_vacancies = format_vacancies(all_vacancies)
-            all_vacanciess.append(formatted_vacancies)
-
-# get_employers_vacancy()
-# print(all_vacanciess)
+# def get_employers_vacancy() -> None:
+#     for employer_id in emp:
+#         all_vacancies = get_vacancies(employer_id)
+#         if all_vacancies:
+#             formatted_vacancies = format_vacancies(all_vacancies)
+#             all_vacanciess.append(formatted_vacancies)

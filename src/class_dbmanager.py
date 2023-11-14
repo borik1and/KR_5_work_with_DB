@@ -5,8 +5,8 @@ import psycopg2
 
 # with psycopg2.connect(**db_config) as conn:
 #     with conn.cursor() as cur:
-#         cur.executemany("INSERT INTRO vacancyes VALUES(%s, %s, %s, %s, %s, %s)", [i for i in employees])
-#         cur.executemany("INSERT INTRO employers VALUES(%s, %s, %s)", [i for i in customers])
+#         cur.executemany("INSERT INTRO vacancy VALUES(%s, %s, %s, %s, %s, %s)", [i for i in employees])
+#         cur.executemany("INSERT INTRO employers VALUES(%s, %s)", [i for i in customers])
 # conn.close()
 #
 
@@ -67,7 +67,7 @@ def create_database(database_name: str, params: dict):
                 )                                            
         """)
 
-    # Создаем таблицу 'employer'
+    # Создаем таблицу 'employers'
     with conn.cursor() as cur:
         cur.execute("""
             CREATE TABLE IF NOT EXISTS employer (
