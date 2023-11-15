@@ -10,12 +10,24 @@ hh_formating = format_vacancies(hh)
 
 
 class DBManager:
-    def __init__(self):
-        pass
+
+    def __init__(self, params):
+        self.params = params
 
     def get_companies_and_vacancies_count(self):
         # получает список всех компаний и количество вакансий у каждой компании.
-        pass
+        with psycopg2.connect(dbname='vacancies', **self.params) as conn:
+            with conn.cursor() as cur:
+                cur.execute('''SELECT employers.employer_name AS "список всех компаний", COUNT(vacancy.employer_id) AS
+                            "количество вакансий" FROM employers LEFT JOIN vacancy ON employers.employer_id
+                             = vacancy.employer_id GROUP BY employers.employer_id, employers.employer_name;''')
+
+                # Получаем результаты
+                results = cur.fetchall()
+
+                # Выводим результаты
+                for row in results:
+                    print(f"Компания: {row[0]}, Количество вакансий: {row[1]}")
 
     def get_all_vacancies(self):
         # получает список всех вакансий с указанием названия компании,
@@ -57,7 +69,7 @@ def create_database(database_name: str, params: dict):
     with conn.cursor() as cur:
         cur.execute("""
             CREATE TABLE IF NOT EXISTS vacancy ( 
-                    employer_id INT,        
+                    employer_id INT,  
                     vacancy_id INT,                          
                     vacancy_name VARCHAR(100) NOT NULL,      
                     url TEXT,                                
