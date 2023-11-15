@@ -1,6 +1,12 @@
-from typing import Any
-
 import psycopg2
+from src.class_api import get_vacancies, format_vacancies
+from src.config import config
+from src.employers import emp
+
+params = config()
+
+hh = get_vacancies(i for i in emp)
+hh_formating = format_vacancies(hh)
 
 
 # with psycopg2.connect(**db_config) as conn:
@@ -57,12 +63,13 @@ def create_database(database_name: str, params: dict):
     # Создаем таблицу 'vacancy'
     with conn.cursor() as cur:
         cur.execute("""
-            CREATE TABLE IF NOT EXISTS vacancy (         
+            CREATE TABLE IF NOT EXISTS vacancy ( 
+                    employer_id INT,        
                     vacancy_id INT,                          
                     vacancy_name VARCHAR(100) NOT NULL,      
                     url TEXT,                                
                     salary INT,                              
-                    experience INT,                          
+                    experience VARCHAR(50),                          
                     employer_name VARCHAR(100)               
                 )                                            
         """)
@@ -70,9 +77,9 @@ def create_database(database_name: str, params: dict):
     # Создаем таблицу 'employers'
     with conn.cursor() as cur:
         cur.execute("""
-            CREATE TABLE IF NOT EXISTS employer (
+            CREATE TABLE IF NOT EXISTS employers (
                 employer_id INT,         
-                employer_name VARCHAR        
+                employer_name VARCHAR     
             )                            
         """)
 
@@ -80,36 +87,20 @@ def create_database(database_name: str, params: dict):
     conn.close()
 
 
-def save_data_to_database(data: list[dict[str, Any]], database_name='vacancies') -> None:
+def save_data_to_database() -> None:
     """сохранение данных в базу данныз"""
+    with psycopg2.connect(dbname='vacancies', **params) as conn:
+        with conn.cursor() as cur:
+            # Преобразование словарей в кортежи перед вставкой
+            values_for_orders = [
+                (v['employer_id'], v['vacancy_id'], v['vacancy_name'], v['url'], v['salary'], v['experience'],
+                 v['employer_name']) for v in
+                hh_formating]
 
-    conn = psycopg2.connect(dbname=database_name, **params)
+            # Выполнение множественной вставки с кортежами
+            cur.executemany("INSERT INTO vacancy VALUES(%s, %s, %s, %s, %s, %s, %s)", values_for_orders)
+            #
+            if isinstance(emp, dict):  # Проверяем, что emp - это словарь
+                cur.executemany("INSERT INTO employers VALUES(%s, %s)", [i for i in emp.items()])
 
-    with conn.cursor() as cur:
-        for channel in data:
-            channel_data = channel['channel']['snippet']
-            channel_stats = channel['channel']['statistics']
-            cur.execute(
-                """
-                INSERT INTO channels (title, views, subscribers, videos, channel_url)
-                VALUES (%s, %s, %s, %s, %s)
-                RETURNING channel_id
-                """,
-                (channel_data['title'], channel_stats['viewCount'], channel_stats['subscriberCount'],
-                 channel_stats['videoCount'], f"https://www.youtube.com/channel/{channel['channel']['id']}")
-            )
-            channel_id = cur.fetchone()[0]
-            videos_data = channel['videos']
-            for video in videos_data:
-                video_data = video['snippet']
-                cur.execute(
-                    """
-                    INSERT INTO videos (channel_id, title, publish_date, video_url)
-                    VALUES (%s, %s, %s, %s)
-                    """,
-                    (channel_id, video_data['title'], video_data['publishedAt'],
-                     f"https://www.youtube.com/watch?v={video['id']['videoId']}")
-                )
 
-    conn.commit()
-    conn.close()
