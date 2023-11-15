@@ -17,6 +17,9 @@ db_manager.get_companies_and_vacancies_count()
 # названия вакансии и зарплаты и ссылки на вакансию.
 db_manager.get_all_vacancies()
 
+# получает среднюю зарплату по вакансиям.
+db_manager.get_avg_salary()
+
 # hh = get_vacancies(i for i in emp)
 # hh_formating = format_vacancies(hh)
 

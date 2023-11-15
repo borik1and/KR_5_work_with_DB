@@ -46,7 +46,17 @@ class DBManager:
 
     def get_avg_salary(self):
         # получает среднюю зарплату по вакансиям.
-        pass
+        with psycopg2.connect(dbname='vacancies', **self.params) as conn:
+            with conn.cursor() as cur:
+                cur.execute('''SELECT vacancy_name, ROUND(AVG(salary)) AS
+                 average_salary FROM vacancy GROUP BY vacancy_name''')
+
+                # Получаем результаты
+                results = cur.fetchall()
+
+                # Выводим результаты
+                for row in results:
+                    print(f"Название вакансии: {row[0]}, Средняя зарплата: {row[1]}")
 
     def get_vacancies_with_higher_salary(self):
         # получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.
