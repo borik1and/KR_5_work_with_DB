@@ -1,7 +1,4 @@
 import requests
-import urllib.parse
-
-from src.employers import emp
 
 all_vacanciess = []
 
@@ -42,11 +39,11 @@ def format_vacancies(all_vacancies):
             'salary': salary,
             'experience': vacancy['experience']['name'],
             'employer_name': vacancy['employer']['name'],
-            'vacancy_id': vacancy['id']
+            'vacancy_id': vacancy['id'],
+            'employer_id': vacancy['employer']['id']
         }
         vacancies.append(new_job)
     return vacancies
-
 
 # def get_employers_vacancy() -> None:
 #     for employer_id in emp:
