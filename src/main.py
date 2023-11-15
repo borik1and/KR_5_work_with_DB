@@ -20,6 +20,9 @@ db_manager.get_all_vacancies()
 # получает среднюю зарплату по вакансиям.
 db_manager.get_avg_salary()
 
+# получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.
+db_manager.get_vacancies_with_higher_salary()
+
 # hh = get_vacancies(i for i in emp)
 # hh_formating = format_vacancies(hh)
 

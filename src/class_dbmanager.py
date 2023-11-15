@@ -60,7 +60,17 @@ class DBManager:
 
     def get_vacancies_with_higher_salary(self):
         # получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.
-        pass
+        with psycopg2.connect(dbname='vacancies', **self.params) as conn:
+            with conn.cursor() as cur:
+                cur.execute('''SELECT vacancy_name FROM vacancy WHERE salary > (SELECT AVG(salary) FROM vacancy)''')
+
+                # Получаем результаты
+                results = cur.fetchall()
+                print()
+                print('Список вакансий, у которых зарплата выше средней: \n')
+                # Выводим результаты
+                for row in results:
+                    print(row[0])
 
     def get_vacancies_with_keyword(self):
         # получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python.
