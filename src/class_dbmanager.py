@@ -32,7 +32,17 @@ class DBManager:
     def get_all_vacancies(self):
         # получает список всех вакансий с указанием названия компании,
         # названия вакансии и зарплаты и ссылки на вакансию.
-        pass
+        with psycopg2.connect(dbname='vacancies', **self.params) as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT employer_name, vacancy_name, salary, url FROM vacancy")
+
+                # Получаем результаты
+                results = cur.fetchall()
+
+                # Выводим результаты
+                for row in results:
+                    print(f"Работадатель: {row[0]}, Название вакансии: {row[1]}, Зарплата: {row[2]},"
+                          f" Cсылка на вакансию: {row[3]}")
 
     def get_avg_salary(self):
         # получает среднюю зарплату по вакансиям.

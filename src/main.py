@@ -7,15 +7,16 @@ from src.employers import emp
 params = config()
 db_manager = DBManager(params)
 
-
 create_database('vacancies', params)
 save_data_to_database()
 
 # получает список всех компаний и количество вакансий у каждой компании.
 db_manager.get_companies_and_vacancies_count()
 
+# получает список всех вакансий с указанием названия компании,
+# названия вакансии и зарплаты и ссылки на вакансию.
+db_manager.get_all_vacancies()
 
+# hh = get_vacancies(i for i in emp)
+# hh_formating = format_vacancies(hh)
 
-hh = get_vacancies(i for i in emp)
-hh_formating = format_vacancies(hh)
-# print(hh_formating)
