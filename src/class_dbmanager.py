@@ -74,7 +74,20 @@ class DBManager:
 
     def get_vacancies_with_keyword(self):
         # получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python.
-        pass
+        search_word = input("Введите слово для поиска: ")
+        with psycopg2.connect(dbname='vacancies', **self.params) as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT vacancy_name FROM vacancy WHERE LOWER(vacancy_name) ILIKE %s",
+                            ('%' + search_word.lower() + '%',))
+
+                # Получаем результаты
+                results = cur.fetchall()
+                print()
+                # Выводим результаты
+                print(f'список всех вакансий, в названии которых содержатся слово: {search_word} \n')
+                for row in results:
+                    print(row[0])
+
 
 
 def create_database(database_name: str, params: dict):

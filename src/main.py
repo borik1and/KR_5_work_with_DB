@@ -11,18 +11,21 @@ create_database('vacancies', params)
 save_data_to_database()
 
 # получает список всех компаний и количество вакансий у каждой компании.
-db_manager.get_companies_and_vacancies_count()
+# db_manager.get_companies_and_vacancies_count()
 
 # получает список всех вакансий с указанием названия компании,
 # названия вакансии и зарплаты и ссылки на вакансию.
-db_manager.get_all_vacancies()
+# db_manager.get_all_vacancies()
 
 # получает среднюю зарплату по вакансиям.
-db_manager.get_avg_salary()
+# db_manager.get_avg_salary()
 
 # получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.
-db_manager.get_vacancies_with_higher_salary()
+# db_manager.get_vacancies_with_higher_salary()
 
+
+# получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python.
+db_manager.get_vacancies_with_keyword()
 # hh = get_vacancies(i for i in emp)
 # hh_formating = format_vacancies(hh)
 
