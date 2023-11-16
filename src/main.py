@@ -1,12 +1,11 @@
-from src.class_api import Hh_api
-from src.vacancies import Vacancy
-from src.class_save import JsonSave, add_vacancy
+from src.class_dbmanager import create_database, DBManager
+from src.class_save import save_data_to_database
+from src.config import config
+from src.user_interaction import user_interaction
 
+params = config()
+db_manager = DBManager(params)
 
-keyword = input('Введите ключевые слова для фильтрации вакансий: ')
-hh = Hh_api(keyword)
-hh_vacancies = hh.format_vacancies(hh.get_vacancies())
-# add_vacancy()
-# Vacancy.compare_vacancies_by_salary()
-
-print(hh_vacancies)
+create_database('vacancies', params)
+save_data_to_database()
+user_interaction()

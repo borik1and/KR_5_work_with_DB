@@ -41,3 +41,6 @@ pip-wheel-metadata
 
 poetry/core/*
 /src/vacancies.json
+/src/database.ini
+/src/test.py
+/src/vacancies_data.json
