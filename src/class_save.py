@@ -1,6 +1,5 @@
 import json
 import os
-import psycopg2
 from src.class_api import get_vacancies, format_vacancies
 from src.config import config
 from src.employers import emp
