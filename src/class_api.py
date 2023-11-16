@@ -35,7 +35,7 @@ def format_vacancies(all_vacancies):
                 salary = salary_to
         new_job = {
             'vacancy_name': vacancy['name'],
-            'url': vacancy['url'],
+            'url': vacancy['alternate_url'],
             'salary': salary,
             'experience': vacancy['experience']['name'],
             'employer_name': vacancy['employer']['name'],
